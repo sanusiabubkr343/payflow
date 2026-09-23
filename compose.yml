@@ -7,6 +7,11 @@ services:
       POSTGRES_PASSWORD: payflow
     ports:
       - "5433:5432"
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
     volumes:
       - payflow_data:/var/lib/postgresql/data
 

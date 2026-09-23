@@ -2,6 +2,7 @@ package com.example.payflow.service;
 
 import com.example.payflow.dto.RegisterRequest;
 import com.example.payflow.dto.RegisteredUser;
+import com.example.payflow.dto.UserRegisteredEvent;
 import com.example.payflow.dto.WalletDto;
 import com.example.payflow.entity.User;
 import com.example.payflow.entity.Wallet;
@@ -12,6 +13,7 @@ import com.example.payflow.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final WalletMapper walletMapper;
+    private final EmailService emailService;
+    private final ApplicationEventPublisher eventPublisher;
+
 
     @Transactional
     public RegisteredUser register(RegisterRequest request) {
@@ -49,6 +54,17 @@ public class UserService {
         user.setWallet(wallet);
 
         User newUser = userRepository.save(user);   // cascades wallet
+
+        // Publish event
+        eventPublisher.publishEvent(
+                new UserRegisteredEvent(
+                        newUser.getId(),
+                        newUser.getEmail(),
+                        newUser.getUsername()
+                )
+        );
+
+
         log.info("Registered user {} with wallet {}", newUser.getUsername(), newUser.getWallet().getId());
 
         return new RegisteredUser(newUser, walletMapper.toDto(newUser.getWallet()));

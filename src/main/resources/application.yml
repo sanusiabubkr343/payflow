@@ -17,3 +17,13 @@ spring:
   jwt:
     secret: "7f3a9c1e5d8b42f6a0c7e3b91d4f68a2c5e9b731f0d6a84c2b7e15f93a6d0c48" #256 random bits
     expiration-ms: 86400000   # 24 hours
+
+
+  mail:
+    host: localhost
+    port: 1025
+    username: ""
+    password: ""
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false

@@ -2,6 +2,7 @@ package com.example.payflow.service;
 
 
 import com.example.payflow.dto.TransferDto;
+import com.example.payflow.dto.TransferNotificationEvent;
 import com.example.payflow.dto.TransferRequest;
 import com.example.payflow.entity.LedgerEntry;
 import com.example.payflow.entity.Transfer;
@@ -19,6 +20,7 @@ import com.example.payflow.repository.WalletRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ public class TransferService {
     private final WalletRepository walletRepository;
     private final LedgerEntryRepository ledgerRepository;
     private final TransferMapper transferMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public TransferDto transfer(
@@ -123,6 +126,23 @@ public class TransferService {
 
         ledgerRepository.save(debit);
         ledgerRepository.save(credit);
+
+        //publish event for both sender and reciever
+        eventPublisher.publishEvent(
+                new TransferNotificationEvent(
+                    fromWallet.getUser().getEmail(),
+                    fromWallet.getUser().getUsername(),
+                    request.amount(),EntryType.DEBIT.toString()
+                )
+        );
+
+        eventPublisher.publishEvent(
+                new TransferNotificationEvent(
+                        toWallet.getUser().getEmail(),
+                        toWallet.getUser().getUsername(),
+                        request.amount(),EntryType.CREDIT.toString()
+                )
+        );
 
         log.info(
                 "Transfer {} completed: {} -> {} amount {}",
