@@ -19,7 +19,7 @@ public class ReconciliationService {
     private final WalletRepository walletRepository;
     private final LedgerEntryRepository ledgerRepository;
 
-    @Scheduled(cron = "0 */2 * * * *")   // every hour on the hour
+    @Scheduled(cron = "0 */45 * * * *")   // every 45 mins
     public void reconcileWallets() {
         log.info("🔍 Starting wallet reconciliation...");
 
