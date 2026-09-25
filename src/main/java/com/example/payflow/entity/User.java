@@ -30,6 +30,12 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true, length = 50)
     private  String username;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Column(name = "avatar_public_id")   // needed for deletion
+    private String avatarPublicId;
+
     @Column(nullable = false, unique = true)
     private String email;
 

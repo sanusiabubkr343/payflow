@@ -40,6 +40,16 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", ex.getMessage());
     }
 
+    @ExceptionHandler(MediaUploadException.class)
+    public ResponseEntity<ErrorResponse> handle(MediaUploadException ex) {
+        return build(HttpStatus.BAD_REQUEST, "MEDIA_UPLOAD_FAILED", ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handle(UserNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", ex.getMessage());
+    }
+
     @ExceptionHandler(ForbiddenAction.class)
     public ResponseEntity<ErrorResponse> handle(ForbiddenAction ex) {
         return build(HttpStatus.FORBIDDEN, "FORBIDDEN", ex.getMessage());

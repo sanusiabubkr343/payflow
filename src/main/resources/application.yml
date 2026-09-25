@@ -15,8 +15,8 @@ spring:
     locations: classpath:db/migration
 
   jwt:
-    secret: "7f3a9c1e5d8b42f6a0c7e3b91d4f68a2c5e9b731f0d6a84c2b7e15f93a6d0c48" #256 random bits
-    expiration-ms: 86400000   # 24 hours
+    secret: ${JWT_SECRET}
+    expiration-ms: ${JWT_EXPIRATION}   # 24 hours
 
 
   mail:
@@ -27,3 +27,17 @@ spring:
     properties:
       mail.smtp.auth: false
       mail.smtp.starttls.enable: false
+
+  cloudinary:
+    cloud_name: ${CLOUDINARY_CLOUD_NAME}
+    api_key: ${CLOUDINARY_API_KEY}
+    api_secret: ${CLOUDINARY_API_SECRET}
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  output:
+    ansi:
+      enabled: ALWAYS
